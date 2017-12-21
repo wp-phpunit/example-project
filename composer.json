@@ -10,11 +10,11 @@
         }
     ],
     "require": {
-        "johnpbloch/wordpress": "4.9.1"
+        "johnpbloch/wordpress": "4.9.*"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.8",
-        "wp-phpunit/wp-phpunit": "4.9.1"
+        "wp-phpunit/wp-phpunit": "4.9.*"
     },
     "scripts": {
         "test": "phpunit"
