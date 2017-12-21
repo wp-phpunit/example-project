@@ -1,0 +1,22 @@
+{
+    "name": "wp-phpunit/example-project",
+    "description": "Example project for using WP PHPUnit",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Evan Mattson",
+            "email": "me@aaemnnost.tv"
+        }
+    ],
+    "require": {
+        "johnpbloch/wordpress": "4.9.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8",
+        "wp-phpunit/wp-phpunit": "4.9.1"
+    },
+    "scripts": {
+        "test": "phpunit"
+    }
+}
