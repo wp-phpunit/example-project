@@ -14,5 +14,6 @@ install: composer install
 
 before_script:
   - mysql -u root -e "GRANT ALL PRIVILEGES ON $WP_DB_NAME.* TO $WP_DB_USER IDENTIFIED BY '$WP_DB_PASS';"
+  - mysql -u root -e "CREATE DATABASE $WP_DB_NAME;"
 
 script: composer test
