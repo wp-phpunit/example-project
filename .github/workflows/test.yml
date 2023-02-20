@@ -1,0 +1,38 @@
+name: Test
+
+on:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # Run every Sunday at midnight.
+    - cron:  '0 0 * * 0'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  php:
+    runs-on: ubuntu-latest
+    env:
+      WP_DB_USER: wp
+      WP_DB_PASS: password
+      WP_DB_NAME: wp_tests
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+
+      - run: composer validate --strict
+
+      - run: composer install
+
+      - run: sudo systemctl start mysql.service
+      - run: |
+          mysql -uroot -proot -e "CREATE DATABASE ${WP_DB_NAME};"
+          mysql -uroot -proot -e "CREATE USER '${WP_DB_USER}'@'localhost' IDENTIFIED BY '${WP_DB_PASS}';"
+          mysql -uroot -proot -e "GRANT ALL PRIVILEGES ON ${WP_DB_PASS}.* TO '${WP_DB_USER}'@'localhost';"
+
+      - run: composer test
