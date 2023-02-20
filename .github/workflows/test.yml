@@ -1,0 +1,51 @@
+name: Test
+
+on:
+  pull_request:
+    branches:
+      - master
+    paths-ignore:
+      - '**.md'
+  workflow_dispatch:
+  schedule:
+    # Run every Sunday at midnight.
+    - cron:  '0 0 * * 0'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  php:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        # Update the specific version of MySQL to match the version used on your server.
+        image: mysql:8
+        env:
+          MYSQL_RANDOM_ROOT_PASSWORD: 1
+          MYSQL_DATABASE: wp_tests_db
+          MYSQL_USER: wp_test
+          MYSQL_PASSWORD: password
+          MYSQL_HOST: 127.0.0.1
+        ports:
+          - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          # Update the specific version of PHP to match the version used on your server.
+          php-version: '8.0'
+
+      - run: composer validate --strict
+
+      - run: composer install
+
+      - run: composer test
+        env:
+          WP_DB_USER: wp_test
+          WP_DB_PASS: password
+          WP_DB_NAME: wp_tests_db
+          WP_DB_HOST: 127.0.0.1:${{ job.services.mysql.ports[3306] }}
