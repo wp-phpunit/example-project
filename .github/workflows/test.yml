@@ -23,6 +23,7 @@ jobs:
         # Update the specific version of MySQL to match the version used on your server.
         image: mysql:8
         env:
+          MYSQL_RANDOM_ROOT_PASSWORD: 1
           MYSQL_DATABASE: wp_tests_db
           MYSQL_USER: wp_test
           MYSQL_PASSWORD: password
