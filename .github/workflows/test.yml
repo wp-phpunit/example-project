@@ -18,6 +18,7 @@ jobs:
       WP_DB_USER: wp
       WP_DB_PASS: password
       WP_DB_NAME: wp_tests
+      WP_DB_HOST: 127.0.0.1
     steps:
       - uses: actions/checkout@v3
 
@@ -32,7 +33,7 @@ jobs:
       - run: sudo systemctl start mysql.service
       - run: |
           mysql -uroot -proot -e "CREATE DATABASE ${WP_DB_NAME};"
-          mysql -uroot -proot -e "CREATE USER '${WP_DB_USER}'@'localhost' IDENTIFIED BY '${WP_DB_PASS}';"
-          mysql -uroot -proot -e "GRANT ALL PRIVILEGES ON ${WP_DB_PASS}.* TO '${WP_DB_USER}'@'localhost';"
+          mysql -uroot -proot -e "CREATE USER '${WP_DB_USER}'@'${WP_DB_HOST}' IDENTIFIED BY '${WP_DB_PASS}';"
+          mysql -uroot -proot -e "GRANT ALL PRIVILEGES ON ${WP_DB_PASS}.* TO '${WP_DB_USER}'@'${WP_DB_HOST}';"
 
       - run: composer test
