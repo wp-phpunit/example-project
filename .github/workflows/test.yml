@@ -2,6 +2,10 @@ name: Test
 
 on:
   pull_request:
+    branches:
+      - master
+    paths-ignore:
+      - '**.md'
   workflow_dispatch:
   schedule:
     # Run every Sunday at midnight.
@@ -30,6 +34,8 @@ jobs:
 
       - run: composer install
 
+      # This is the simplest example using the MySQL instance on the GitHub runner.
+      # Ideally, this would use an instance 
       - run: sudo systemctl start mysql.service
       - run: |
           mysql -uroot -proot -e "CREATE DATABASE ${WP_DB_NAME};"
